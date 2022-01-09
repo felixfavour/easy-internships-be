@@ -18,6 +18,9 @@ router.get('/', (req,res) => {
 const mongoose = require('mongoose')
 mongoose.connect(`${process.env.DB_HOST}://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5g703.mongodb.net/EASYiNTERNSHIPS?retryWrites=true&w=majority`)
 
+// CREATE USER INSTANCE
+const User = require('./app/models/User')
+
 app.use('/api/v1', router)
 
 // ALLOCATE SERVER HOST
