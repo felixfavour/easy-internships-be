@@ -11,5 +11,8 @@
     "url": "easy-internships-be"
   },
   "author": "Favour Felix",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
