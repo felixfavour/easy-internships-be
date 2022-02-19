@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
+import dotenv from 'dotenv'
 
 // Require environmental variables
-require('dotenv').config()
+dotenv.config()
 
 // Method to connect to MongoDB database
 export const connectDB = async () => {
