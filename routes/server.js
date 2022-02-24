@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import get from '../../controllers/server.js';
+import get from '../controllers/server.js';
 
 const router = Router()
 router.get('/v1', get)

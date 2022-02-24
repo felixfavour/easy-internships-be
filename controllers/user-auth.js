@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { User } from '../../models/User.js'
+import { User } from '../models/User.js'
 
 // JWT Max age
 const maxAge = 3 * 24 * 60 * 60;

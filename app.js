@@ -1,9 +1,9 @@
 import express, { json, urlencoded } from 'express'
 import cors from 'cors'
-import initialRoute from './api/routes/server.js'
-import userAuth from './api/routes/user/auth.js'
-import userCRUD from './api/routes/user/crud.js'
-import logRequests from './api/middlewares/logger.js'
+import initialRoute from './routes/server.js'
+import userAuth from './routes/user-auth.js'
+import userCRUD from './routes/user-crud.js'
+import logRequests from './middlewares/logger.js'
 
 const app = express()
 
