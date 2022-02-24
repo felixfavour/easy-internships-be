@@ -2,6 +2,7 @@ import express, { json, urlencoded } from 'express'
 import cors from 'cors'
 import initialRoute from './api/routes/server.js'
 import userAuth from './api/routes/user/auth.js'
+import userCRUD from './api/routes/user/crud.js'
 import logRequests from './api/middlewares/logger.js'
 
 const app = express()
@@ -24,5 +25,8 @@ app.use('', initialRoute)
 
 // UserAuth route
 app.use('/auth', userAuth)
+
+// UserCRUD route
+app.use('/user', userCRUD)
 
 export default app

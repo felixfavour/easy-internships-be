@@ -1,6 +1,6 @@
+import { loginUser } from '../../../controllers/user/auth.js';
 import router from '../server.js';
-import { registerUser } from '../../../controllers/user/auth.js';
 
-router.get('/v1/auth', registerUser)
+router.post('/v1/auth', loginUser)
 
 export default router
