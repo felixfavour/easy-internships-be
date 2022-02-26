@@ -8,6 +8,7 @@ import interests from './routes/interest.js'
 import performance from './routes/performance.js'
 import skills from './routes/skill.js'
 import logRequests from './middlewares/logger.js'
+import fileUpload from './routes/file-upload.js'
 
 const app = express()
 
@@ -44,5 +45,8 @@ app.use('/performance', performance)
 
 // SkillsCRUD route
 app.use('/skills', skills)
+
+// Amazon S3 file upload route
+app.use('/image', fileUpload)
 
 export default app
