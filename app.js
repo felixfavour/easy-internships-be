@@ -3,10 +3,10 @@ import cors from 'cors'
 import initialRoute from './routes/server.js'
 import userAuth from './routes/user-auth.js'
 import userCRUD from './routes/user-crud.js'
-import employers from './routes/employers.js'
-import interests from './routes/interests.js'
+import employers from './routes/employer.js'
+import interests from './routes/interest.js'
 import performance from './routes/performance.js'
-import skills from './routes/skills.js'
+import skills from './routes/skill.js'
 import logRequests from './middlewares/logger.js'
 
 const app = express()

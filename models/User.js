@@ -21,12 +21,11 @@ const UserSchema = mongoose.Schema({
   avatar: String,
   icon: String,
   website: String,
+  tagline: String,
   bio: String,
   company_sector: String,
   company_size: String,
-  views: Number,
-  following: Array,
-  followers: Array
+  views: Number
 }, { timestamps: true })
 
 UserSchema.pre('save', async function (next) {
