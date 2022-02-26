@@ -27,7 +27,7 @@ const UserSchema = mongoose.Schema({
   views: Number,
   following: Array,
   followers: Array
-})
+}, { timestamps: true })
 
 UserSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt();

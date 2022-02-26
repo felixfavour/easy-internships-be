@@ -8,6 +8,6 @@ const EmployerSchema = mongoose.Schema({
   rating: String,
   photos: Array,
   featured_cards: Array
-})
+}, { timestamps: true })
 
 export const Employer = mongoose.model('Employer', EmployerSchema)
