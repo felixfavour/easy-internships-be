@@ -1,8 +1,10 @@
 import mongoose from 'mongoose'
 
-const InterestSchema = mongoose.Schema({
-  user_id: String,
-  employer_id: String
+const ActivitySchema = mongoose.Schema({
+  interest_id: String,
+  employer_id: String,
+  employer_name: String,
+  employer_icon: String
 }, { timestamps: true })
 
-export const Interest = mongoose.model('Interest', InterestSchema)
+export const Activity = mongoose.model('Activity', ActivitySchema)

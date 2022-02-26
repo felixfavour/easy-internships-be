@@ -9,12 +9,23 @@ const createToken = (id) => jwt.sign({ id }, 'secret', {
   expiresIn: maxAge
 });
 
+// Log In User
 export const loginUser = async (req, res) => {
   const { email, password } = req.body
   try {
     const user = await User.login(email, password)
     const token = createToken(user._id);
     res.status(200).json({ user, token })
+  } catch (err) {
+    console.error(`LOGIN USER ERROR: ${err}`)
+    res.status(400).json(err)
+  }
+}
+
+// Change User Password
+export const changePassword = async (req, res) => {
+  try {
+    //
   } catch (err) {
     console.error(`LOGIN USER ERROR: ${err}`)
     res.status(400).json(err)

@@ -1,8 +1,11 @@
 import mongoose from 'mongoose'
 
-const InterestSchema = mongoose.Schema({
-  user_id: String,
-  employer_id: String
+const IntegrationSchema = mongoose.Schema({
+  name: String,
+  connector: String,
+  connector_id: String,
+  primary_user_id: String, // Student
+  secondary_user_id: String, // Employer or School
 }, { timestamps: true })
 
-export const Interest = mongoose.model('Interest', InterestSchema)
+export const Integration = mongoose.model('Integration', IntegrationSchema)
