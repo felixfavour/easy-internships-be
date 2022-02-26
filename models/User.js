@@ -7,7 +7,26 @@ const UserSchema = mongoose.Schema({
     type: String,
     unique: true
   },
-  password: String
+  username: {
+    type: String,
+    unique: true
+  },
+  phone: {
+    type: String,
+    unique: true
+  },
+  password: String,
+  type: String,
+  location: String,
+  avatar: String,
+  icon: String,
+  website: String,
+  bio: String,
+  company_sector: String,
+  company_size: String,
+  views: Number,
+  following: Array,
+  followers: Array
 })
 
 UserSchema.pre('save', async function (next) {

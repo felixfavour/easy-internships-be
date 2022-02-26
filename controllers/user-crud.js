@@ -11,9 +11,8 @@ const createToken = (id) => jwt.sign({ id }, 'secret', {
 
 // Create user
 export const createUser = async (req, res) => {
-  const { full_name, email, password } = req.body
   try {
-    const user = await User.create({ full_name, email, password })
+    const user = await User.create(req.body)
     const token = createToken(user._id);
     res.status(201).json({ user, token })
   } catch (err) {
