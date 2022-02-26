@@ -47,6 +47,6 @@ app.use('/performance', performance)
 app.use('/skills', skills)
 
 // Amazon S3 file upload route
-app.use('/image', fileUpload)
+app.use('/file', fileUpload)
 
 export default app
