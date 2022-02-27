@@ -1,20 +1,66 @@
-import { errorMsg } from '../helpers/functions.js'
+import { errorMsg, successMsg } from '../helpers/functions.js'
+import { Employer } from '../models/Employer.js'
+import { User } from '../models/User.js'
+import { ObjectID } from '../config/database.js'
+import { Visit } from '../models/Visit.js'
 
-// Get all employers
+// Get all Employers
 export const getAllEmployers = async (req, res) => {
   try {
-    //
+    const employers = await Employer.find({})
+    res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
   }
 }
 
-// Get popular employers
-// popularity is measured by number of visits.
+// Get Popular Employers
 export const getPopularEmployers = async (req, res) => {
   try {
-    //
+    const employers = await Employer.aggregate([
+      {
+        $lookup: {
+          from: 'visits',
+          localField: 'user_id',
+          foreignField: 'visited_user',
+          as: 'visits'
+        }
+      }
+    ])
+    employers.sort((a, b) => b.visits.length - a.visits.length)
+    // eslint-disable-next-line no-param-reassign
+    employers.forEach((employer) => delete employer.visits)
+    res.status(200).json(successMsg(employers))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get Employer details
+export const getEmployer = async (req, res) => {
+  try {
+    const { id } = req.params
+    const employer = await Employer.findById(ObjectID(id)).lean()
+    employer.user = await User.findById(ObjectID(employer.user_id))
+    res.status(200).json(successMsg(employer))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Update number of Employer profile visits
+export const updateEmployerVisits = async (req, res) => {
+  try {
+    const { user_id, visited_user, visited_user_type } = req.body
+    const visit = await Visit.create({
+      user_id: ObjectID(user_id),
+      visited_user: ObjectID(visited_user),
+      visited_user_type
+    })
+    res.status(200).json(successMsg(visit))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -34,16 +80,6 @@ export const searchEmployers = async (req, res) => {
 // Filter employers
 // Employers would be filtered by [company_size], [location], [sector], [job_roles]
 export const filterEmployers = async (req, res) => {
-  try {
-    //
-  } catch (err) {
-    console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(errorMsg(err))
-  }
-}
-
-// Get Employer details
-export const getEmployer = async (req, res) => {
   try {
     //
   } catch (err) {
