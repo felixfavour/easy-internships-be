@@ -6,6 +6,7 @@ import { Employer } from '../models/Employer.js'
 import { School } from '../models/School.js'
 import { Student } from '../models/Student.js'
 import { User } from '../models/User.js'
+import { Visit } from '../models/Visit.js'
 
 // JWT Max age
 const maxAge = 3 * 24 * 60 * 60;
@@ -83,6 +84,22 @@ export const updatePassword = async (req, res) => {
     const { id } = req.params
     await User.updatePassword(id, password, new_password)
     res.status(200).json(successMsg('Password was successfully updated.'))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Update number of User visits
+export const updateUserVisits = async (req, res) => {
+  try {
+    const { user_id, visited_user, visited_user_type } = req.body
+    const visit = await Visit.create({
+      user_id: ObjectID(user_id),
+      visited_user: ObjectID(visited_user),
+      visited_user_type
+    })
+    res.status(200).json(successMsg(visit))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))

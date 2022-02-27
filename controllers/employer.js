@@ -2,7 +2,6 @@ import { errorMsg, successMsg } from '../helpers/functions.js'
 import { Employer } from '../models/Employer.js'
 import { User } from '../models/User.js'
 import { ObjectID } from '../config/database.js'
-import { Visit } from '../models/Visit.js'
 
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
@@ -58,22 +57,6 @@ export const getEmployer = async (req, res) => {
   }
 }
 
-// Update number of Employer profile visits
-export const updateEmployerVisits = async (req, res) => {
-  try {
-    const { user_id, visited_user, visited_user_type } = req.body
-    const visit = await Visit.create({
-      user_id: ObjectID(user_id),
-      visited_user: ObjectID(visited_user),
-      visited_user_type
-    })
-    res.status(200).json(successMsg(visit))
-  } catch (err) {
-    console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(errorMsg(err))
-  }
-}
-
 // FTS Search for employers
 export const searchEmployers = async (req, res) => {
   try {
@@ -88,9 +71,9 @@ export const searchEmployers = async (req, res) => {
 // Employers would be filtered by [company_size], [location], [sector], [job_roles]
 export const filterEmployers = async (req, res) => {
   try {
-    const {
-      company_size, location, company_sector, role
-    } = req.query
+    // const {
+    //   company_size, location, company_sector, role
+    // } = req.query
     const employers = await Employer.aggregate([
       { $set: { user_id: { $toObjectId: '$user_id' } } },
       {
