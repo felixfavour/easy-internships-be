@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import { ObjectID } from '../config/database.js';
 
 const UserSchema = mongoose.Schema({
   full_name: String,
@@ -42,6 +43,17 @@ UserSchema.statics.login = async function (email, password) {
     throw Error('Incorrect password')
   }
   throw Error('Incorrect email')
+}
+
+// Static method to update user password
+UserSchema.statics.updatePassword = async function (userId, newPassword) {
+  const user = await this.findById(ObjectID(userId))
+  if (user) {
+    user.password = newPassword
+    user.save()
+  } else {
+    throw Error('User Not Found')
+  }
 }
 
 export const User = mongoose.model('User', UserSchema)

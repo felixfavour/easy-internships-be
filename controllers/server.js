@@ -1,8 +1,10 @@
+import { successMsg } from '../helpers/functions.js'
+
 const get = (_req, res) => {
   try {
-    return res.status(200).json({ error: false, message: 'EASYiNTERSHIPS API is active.' })
+    return res.status(200).json(successMsg('EASYiNTERSHIPS API is active.'))
   } catch {
-    return res.status(500).json({ error: true, message: 'EASYiNTERSHIPS API is down.' })
+    return res.status(500).json(successMsg('EASYiNTERSHIPS API is down.'))
   }
 }
 
