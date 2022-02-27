@@ -46,11 +46,16 @@ UserSchema.statics.login = async function (email, password) {
 }
 
 // Static method to update user password
-UserSchema.statics.updatePassword = async function (userId, newPassword) {
+UserSchema.statics.updatePassword = async function (userId, password, newPassword) {
   const user = await this.findById(ObjectID(userId))
   if (user) {
-    user.password = newPassword
-    user.save()
+    const auth = await bcrypt.compare(password, user.password)
+    if (auth) {
+      user.password = newPassword
+      user.save()
+    } else {
+      throw Error('Incorrect password')
+    }
   } else {
     throw Error('User Not Found')
   }

@@ -79,9 +79,9 @@ export const updateUser = async (req, res) => {
 // Update User Password
 export const updatePassword = async (req, res) => {
   try {
-    const { new_password } = req.body
+    const { password, new_password } = req.body
     const { id } = req.params
-    await User.updatePassword(id, new_password)
+    await User.updatePassword(id, password, new_password)
     res.status(200).json(successMsg('Password was successfully updated.'))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
