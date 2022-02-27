@@ -1,10 +1,12 @@
+import { errorMsg } from '../helpers/functions.js'
+
 // Get User Performance
 export const getUserPerformance = async (req, res) => {
   try {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -14,7 +16,7 @@ export const getUserVisitors = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -24,6 +26,6 @@ export const getUserVisits = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

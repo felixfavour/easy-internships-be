@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
+import { ObjectID } from '../config/database.js'
 import { USER_TYPE } from '../helpers/constants.js'
+import { errorMsg } from '../helpers/functions.js'
 import { Employer } from '../models/Employer.js'
 import { School } from '../models/School.js'
 import { Student } from '../models/Student.js'
@@ -37,7 +39,23 @@ export const createUser = async (req, res) => {
     res.status(201).json({ user, token })
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// get User
+export const getUser = async (req, res) => {
+  try {
+    const { id } = req.params
+    if (id) {
+      const objectId = ObjectID(id)
+      const user = await User.findById(objectId).exec()
+      res.status(200).json(user)
+    }
+    res.status(400).json(errorMsg('No User found'))
+  } catch (err) {
+    console.error(`CREATE USER ERROR: ${err}`)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -47,7 +65,7 @@ export const updateUser = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -57,6 +75,6 @@ export const getUserActivity = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

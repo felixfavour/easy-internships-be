@@ -1,10 +1,12 @@
+import { errorMsg } from '../helpers/functions.js'
+
 // Add Question for Employer
 export const addQuestion = async (req, res) => {
   try {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -14,7 +16,7 @@ export const getQuestions = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -24,7 +26,7 @@ export const updateQuestionsVote = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -34,7 +36,7 @@ export const addAnswer = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -44,6 +46,6 @@ export const updateAnswerVote = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

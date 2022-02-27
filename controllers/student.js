@@ -1,10 +1,12 @@
+import { errorMsg } from '../helpers/functions.js'
+
 // get Student
 export const getStudent = async (req, res) => {
   try {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -14,7 +16,7 @@ export const getAllStudents = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -25,6 +27,6 @@ export const filterAllStudents = async (req, res) => {
     //
   } catch (err) {
     console.error(`CREATE USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

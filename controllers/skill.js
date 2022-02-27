@@ -1,10 +1,12 @@
+import { errorMsg } from '../helpers/functions.js'
+
 // Get All skills
 export const getSkills = async (req, res) => {
   try {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -14,7 +16,7 @@ export const getUserSkills = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -24,7 +26,7 @@ export const createSkill = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -34,7 +36,7 @@ export const addSkill = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -44,6 +46,6 @@ export const removeSkill = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

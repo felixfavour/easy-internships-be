@@ -1,10 +1,12 @@
+import { errorMsg } from '../helpers/functions.js'
+
 // Get all employers
 export const getAllEmployers = async (req, res) => {
   try {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -15,7 +17,7 @@ export const getPopularEmployers = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -25,7 +27,7 @@ export const searchEmployers = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -36,7 +38,7 @@ export const filterEmployers = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -46,6 +48,6 @@ export const getEmployer = async (req, res) => {
     //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

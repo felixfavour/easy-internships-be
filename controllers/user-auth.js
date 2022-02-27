@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { errorMsg } from '../helpers/functions.js';
 import { User } from '../models/User.js'
 
 // JWT Max age
@@ -18,7 +19,7 @@ export const loginUser = async (req, res) => {
     res.status(200).json({ user, token })
   } catch (err) {
     console.error(`LOGIN USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }
 
@@ -28,6 +29,6 @@ export const changePassword = async (req, res) => {
     //
   } catch (err) {
     console.error(`LOGIN USER ERROR: ${err}`)
-    res.status(400).json(err)
+    res.status(400).json(errorMsg(err))
   }
 }

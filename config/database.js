@@ -17,4 +17,7 @@ export const connectDB = async () => {
 // Method to disconnect from MongoDB Database
 export const closeDB = async () => mongoose.disconnect()
 
+// Export ObjectID
+export const ObjectID = mongoose.Types.ObjectId
+
 // DB SETUP
