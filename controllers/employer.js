@@ -7,7 +7,14 @@ import { Visit } from '../models/Visit.js'
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
   try {
-    const employers = await Employer.find({})
+    const employers = await Employer.aggregate([
+      { $set: { user_id: { $toObjectId: '$user_id' } } },
+      {
+        $lookup: {
+          from: 'users', localField: 'user_id', foreignField: '_id', as: 'users'
+        }
+      }
+    ])
     res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -81,7 +88,18 @@ export const searchEmployers = async (req, res) => {
 // Employers would be filtered by [company_size], [location], [sector], [job_roles]
 export const filterEmployers = async (req, res) => {
   try {
-    //
+    const {
+      company_size, location, company_sector, role
+    } = req.query
+    const employers = await Employer.aggregate([
+      { $set: { user_id: { $toObjectId: '$user_id' } } },
+      {
+        $lookup: {
+          from: 'users', localField: 'user_id', foreignField: '_id', as: 'users'
+        }
+      }
+    ])
+    res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
