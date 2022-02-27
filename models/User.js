@@ -23,8 +23,7 @@ const UserSchema = mongoose.Schema({
   website: String,
   tagline: String,
   bio: String,
-  company_sector: String,
-  company_size: String,
+  student_school: String,
   views: Number
 }, { timestamps: true })
 

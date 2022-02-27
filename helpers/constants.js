@@ -3,3 +3,9 @@ export const USER_TYPE = {
   SCHOOL: 'school',
   STUDENT: 'student'
 }
+
+export const INTERVIEW_DIFFICULTY = {
+  EMPLOYER: 'Difficult',
+  SCHOOL: 'Medium',
+  STUDENT: 'Easy'
+}
