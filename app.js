@@ -44,7 +44,7 @@ app.use('/interests', interests)
 app.use('/performance', performance)
 
 // SkillsCRUD route
-app.use('/skills', skills)
+app.use('/skill', skills)
 
 // Amazon S3 file upload route
 app.use('/file', fileUpload)

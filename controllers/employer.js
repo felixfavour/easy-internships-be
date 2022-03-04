@@ -71,9 +71,6 @@ export const searchEmployers = async (req, res) => {
 // Employers would be filtered by [company_size], [location], [sector], [job_roles]
 export const filterEmployers = async (req, res) => {
   try {
-    // const {
-    //   company_size, location, company_sector, role
-    // } = req.query
     const employers = await Employer.aggregate([
       { $set: { user_id: { $toObjectId: '$user_id' } } },
       {
