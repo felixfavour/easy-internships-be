@@ -4,6 +4,7 @@ import { User } from '../models/User.js'
 import { ObjectID } from '../config/database.js'
 import { Review } from '../models/Review.js'
 import { EmployerRole } from '../models/EmployerRole.js'
+import { Salary } from '../models/Salary.js'
 
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
@@ -162,10 +163,11 @@ export const deleteEmployerRoles = async (req, res) => {
   }
 }
 
-// Add Employer Salary
+// Add Employer Salary - Salary for a role is dependent on the employer.
 export const addEmployerSalary = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const salary = await Salary.create(req.body)
+    res.status(200).json(successMsg(salary))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -175,7 +177,8 @@ export const addEmployerSalary = async (req, res) => {
 // Get Employer Salaries
 export const getEmployerSalaries = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const salaries = await Salary.find({ employer_id: req.params.id })
+    res.status(200).json(successMsg(salaries))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -185,7 +188,8 @@ export const getEmployerSalaries = async (req, res) => {
 // Delete Employer Salary
 export const deleteEmployerSalary = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    await Salary.findByIdAndDelete(req.params.id)
+    res.status(200).json(successMsg('Salary has been deleted.'))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))

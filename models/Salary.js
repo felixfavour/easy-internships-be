@@ -3,8 +3,9 @@ import mongoose from 'mongoose'
 const SalarySchema = mongoose.Schema({
   user_id: String,
   employer_id: String,
-  name: String,
   role_id: String,
+  employer_role_id: String,
+  amount: Number,
   role_name: String,
   /**
    * [competition_comparison] signifies how well the salary in the current
