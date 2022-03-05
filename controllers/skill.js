@@ -1,6 +1,5 @@
 import { errorMsg, successMsg } from '../helpers/functions.js'
 import { Skill } from '../models/Skill.js'
-import { User } from '../models/User.js'
 import { UserSkill } from '../models/UserSkill.js'
 
 // Get All skills

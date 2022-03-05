@@ -2,6 +2,7 @@ import { errorMsg, successMsg } from '../helpers/functions.js'
 import { Employer } from '../models/Employer.js'
 import { User } from '../models/User.js'
 import { ObjectID } from '../config/database.js'
+import { Review } from '../models/Review.js'
 
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
@@ -80,6 +81,159 @@ export const filterEmployers = async (req, res) => {
       }
     ])
     res.status(200).json(successMsg(employers))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Add Employer Review
+export const addEmployerReview = async (req, res) => {
+  try {
+    const review = await Review.create(req.body)
+    res.status(201).json(successMsg(review))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get Employer Reviews
+export const getEmployerReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find({ employer_id: req.params.id })
+    res.status(200).json(successMsg(reviews))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Delete Employer Reviews
+export const deleteEmployerReviews = async (req, res) => {
+  try {
+    await Review.findByIdAndDelete(req.params.id)
+    res.status(200).json(successMsg('Review has been deleted successfully'))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Add Employer Roles
+export const addEmployerRoles = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get Employer Roles
+export const getEmployerRoles = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Delete Employer Roles
+export const deleteEmployerRoles = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Add Employer Salary
+export const addEmployerSalary = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get Employer Salaries
+export const getEmployerSalaries = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Delete Employer Salary
+export const deleteEmployerSalary = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Ask Employer Question
+export const addEmployerQuestion = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get all Questions for Employer
+export const getEmployerQuestions = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Upvote/Downvote Employer Questions
+export const voteEmployerQuestion = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Ask Employer Question - Answer
+export const addEmployerQuestionAnswer = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get all Answers for Questions for Employer
+export const getQuestionsAnswer = async (req, res) => {
+  try {
+    //
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Upvote/Downvote Employer Question - Answers
+export const voteEmployerQuestionAnswer = async (req, res) => {
+  try {
+    //
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))

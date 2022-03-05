@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const RoleSchema = mongoose.Schema({
   name: String,
-  information: String,
+  description: String,
   employer_id: String
 }, { timestamps: true })
 
