@@ -1,4 +1,6 @@
 import {
+  addEmployerQuestion,
+  addEmployerQuestionAnswer,
   addEmployerReview,
   addEmployerRoles,
   addEmployerSalary,
@@ -8,11 +10,15 @@ import {
   filterEmployers,
   getAllEmployers,
   getEmployer,
+  getEmployerQuestions,
   getEmployerReviews,
   getEmployerRoles,
   getEmployerSalaries,
   getPopularEmployers,
-  searchEmployers
+  getQuestionsAnswer,
+  searchEmployers,
+  voteEmployerQuestion,
+  voteEmployerQuestionAnswer
 } from '../controllers/employer.js';
 import router from './server.js';
 
@@ -37,5 +43,13 @@ router.delete('/v1/employer/role/:id', deleteEmployerRoles)
 router.post('/v1/employer/salary', addEmployerSalary)
 router.get('/v1/employer/:id/salary', getEmployerSalaries)
 router.delete('/v1/employer/salary/:id', deleteEmployerSalary)
+
+// EMPLOYER QandA
+router.post('/v1/employer/question', addEmployerQuestion)
+router.post('/v1/employer/answer', addEmployerQuestionAnswer)
+router.get('/v1/employer/:id/question', getEmployerQuestions)
+router.get('/v1/employer/question/:id/answer', getQuestionsAnswer)
+router.post('/v1/employer/question/:id/vote', voteEmployerQuestion)
+router.post('/v1/employer/answer/:id/vote', voteEmployerQuestionAnswer)
 
 export default router

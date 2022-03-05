@@ -5,6 +5,11 @@ import { ObjectID } from '../config/database.js'
 import { Review } from '../models/Review.js'
 import { EmployerRole } from '../models/EmployerRole.js'
 import { Salary } from '../models/Salary.js'
+import { Question } from '../models/Question.js'
+import { Answer } from '../models/Answer.js'
+import { QuestionVote } from '../models/QuestionVote.js'
+import { AnswerVote } from '../models/AnswerVote.js'
+import { VOTE } from '../helpers/constants.js'
 
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
@@ -199,7 +204,8 @@ export const deleteEmployerSalary = async (req, res) => {
 // Ask Employer Question
 export const addEmployerQuestion = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const question = await Question.create(req.body)
+    res.status(200).json(successMsg(question))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -209,7 +215,8 @@ export const addEmployerQuestion = async (req, res) => {
 // Get all Questions for Employer
 export const getEmployerQuestions = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const questions = await Question.find({ employer_id: req.params.id })
+    res.status(200).json(successMsg(questions))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -219,7 +226,19 @@ export const getEmployerQuestions = async (req, res) => {
 // Upvote/Downvote Employer Questions
 export const voteEmployerQuestion = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const attrs = {
+      user_id: req.body.user_id,
+      question_id: req.params.id
+    }
+    await QuestionVote.find(attrs).deleteMany()
+    await QuestionVote.create({ ...attrs, type: req.body.type })
+
+    // Get all questions votes
+    const votes = await QuestionVote.find({ question_id: req.params.id }).lean()
+    const actualVotes = (votes.filter((v) => v.type === VOTE.UP).length)
+    - votes.filter((v) => v.type === VOTE.DOWN).length
+    console.log(actualVotes)
+    res.status(201).json(successMsg({ votes: actualVotes }))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -229,7 +248,8 @@ export const voteEmployerQuestion = async (req, res) => {
 // Ask Employer Question - Answer
 export const addEmployerQuestionAnswer = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const answer = await Answer.create(req.body)
+    res.status(200).json(successMsg(answer))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -239,7 +259,8 @@ export const addEmployerQuestionAnswer = async (req, res) => {
 // Get all Answers for Questions for Employer
 export const getQuestionsAnswer = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const answers = await Answer.find({ question_id: req.params.id })
+    res.status(200).json(successMsg(answers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -249,7 +270,19 @@ export const getQuestionsAnswer = async (req, res) => {
 // Upvote/Downvote Employer Question - Answers
 export const voteEmployerQuestionAnswer = async (req, res) => {
   try {
-    res.status(200).json(successMsg())
+    const attrs = {
+      user_id: req.body.user_id,
+      answer_id: req.params.id
+    }
+    await AnswerVote.find(attrs).deleteMany()
+    await AnswerVote.create({ ...attrs, type: req.body.type })
+
+    // Get all answers votes
+    const votes = await QuestionVote.find({ question_id: req.params.id }).lean()
+    const actualVotes = (votes.filter((v) => v.type === VOTE.UP).length)
+    - votes.filter((v) => v.type === VOTE.DOWN).length
+    console.log(actualVotes)
+    res.status(201).json(successMsg({ votes: actualVotes }))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))

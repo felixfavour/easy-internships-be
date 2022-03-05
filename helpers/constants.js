@@ -9,3 +9,9 @@ export const INTERVIEW_DIFFICULTY = {
   SCHOOL: 'Medium',
   STUDENT: 'Easy'
 }
+
+export const VOTE = {
+  UP: 'upvote',
+  DOWN: 'downvote',
+  DEFAULT: 'default'
+}
