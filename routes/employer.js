@@ -1,10 +1,13 @@
 import {
   addEmployerReview,
+  addEmployerRoles,
   deleteEmployerReviews,
+  deleteEmployerRoles,
   filterEmployers,
   getAllEmployers,
   getEmployer,
   getEmployerReviews,
+  getEmployerRoles,
   getPopularEmployers,
   searchEmployers
 } from '../controllers/employer.js';
@@ -21,5 +24,10 @@ router.get('/v1/employer/search/:query', searchEmployers)
 router.post('/v1/employer/review', addEmployerReview)
 router.get('/v1/employer/:id/review', getEmployerReviews)
 router.delete('/v1/employer/review/:id', deleteEmployerReviews)
+
+// EMPLOYER ROLES
+router.post('/v1/employer/role', addEmployerRoles)
+router.get('/v1/employer/:id/role', getEmployerRoles)
+router.delete('/v1/employer/role/:id', deleteEmployerRoles)
 
 export default router

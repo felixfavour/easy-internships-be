@@ -3,6 +3,7 @@ import cors from 'cors'
 import initialRoute from './routes/server.js'
 import userAuth from './routes/user-auth.js'
 import userCRUD from './routes/user-crud.js'
+import roles from './routes/role.js'
 import employers from './routes/employer.js'
 import interests from './routes/interest.js'
 import performance from './routes/performance.js'
@@ -33,6 +34,9 @@ app.use('/auth', userAuth)
 
 // UserCRUD route
 app.use('/user', userCRUD)
+
+// EmployerCRUD route
+app.use('/role', roles)
 
 // EmployerCRUD route
 app.use('/employer', employers)
