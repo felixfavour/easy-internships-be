@@ -10,6 +10,7 @@ import performance from './routes/performance.js'
 import skills from './routes/skill.js'
 import logRequests from './middlewares/logger.js'
 import fileUpload from './routes/file-upload.js'
+import isAuth from './middlewares/auth.js'
 
 const app = express()
 
@@ -25,11 +26,14 @@ app.use(logRequests)
 // Parse FormData requests
 app.use(urlencoded({ extended: true }))
 
+// Check that user is authenticated
+app.use(isAuth)
+
 // Registering routes
-// Home route
+// Home route - Unaffected by [isAuth] middleware
 app.use('', initialRoute)
 
-// UserAuth route
+// UserAuth route - Unaffected by [isAuth] middleware
 app.use('/auth', userAuth)
 
 // UserCRUD route

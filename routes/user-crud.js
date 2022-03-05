@@ -1,5 +1,4 @@
 import {
-  createUser,
   getUser,
   updatePassword,
   updateUser,
@@ -7,7 +6,6 @@ import {
 } from '../controllers/user-crud.js';
 import router from './server.js';
 
-router.post('/v1/user', createUser)
 router.post('/v1/user/visit', updateUserVisits)
 router.get('/v1/user/:id', getUser)
 router.put('/v1/user/:id', updateUser)

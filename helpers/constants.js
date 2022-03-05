@@ -15,3 +15,10 @@ export const VOTE = {
   DOWN: 'downvote',
   DEFAULT: 'default'
 }
+
+export const UNPROTECTED_ROUTES = [
+  '/',
+  '/v1',
+  '/v1/auth/signup',
+  '/v1/auth/login'
+]
