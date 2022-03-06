@@ -21,5 +21,6 @@ export const UNPROTECTED_ROUTES = [
   '/v1',
   '/v1/auth/signup',
   '/v1/auth/login',
-  '/v1/file'
+  '/v1/file',
+  '/v1/user/username'
 ]

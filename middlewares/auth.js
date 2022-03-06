@@ -11,7 +11,8 @@ const isAuth = (req, res, next) => {
   const { authorization } = req.headers
 
   // If it is an authorization protected route
-  if (!UNPROTECTED_ROUTES.includes(req.url)) {
+  console.log(req)
+  if (!UNPROTECTED_ROUTES.includes(req.url) || req.url.includes(UNPROTECTED_ROUTES[5])) {
     // Check if user included token
     if (authorization?.split(' ')[0] === 'Bearer') {
       try {
