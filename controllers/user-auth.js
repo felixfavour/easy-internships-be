@@ -16,11 +16,15 @@ const createToken = (id, user_type) => jwt.sign({ id, user_type }, process.env.J
 
 // Log In User
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, school_id } = req.body
   try {
     const user = await User.login(email, password)
     const token = createToken(user._id, user.type);
-    res.status(200).json(successMsg({ user, token }))
+    if (user.student_school === school_id) {
+      res.status(200).json(successMsg({ user, token }))
+    } else {
+      throw Error('Student is not enrolled in this school')
+    }
   } catch (err) {
     console.error(`LOGIN USER ERROR: ${err}`)
     res.status(400).json(errorMsg(err))
