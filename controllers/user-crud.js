@@ -1,7 +1,10 @@
 import { ObjectID } from '../config/database.js'
 import { errorMsg, successMsg } from '../helpers/functions.js'
+import { USER_TYPE } from '../helpers/constants.js'
 import { User } from '../models/User.js'
 import { Visit } from '../models/Visit.js'
+import { School } from '../models/School.js'
+import { Employer } from '../models/Employer.js'
 
 // get User
 export const getUser = async (req, res) => {
@@ -13,6 +16,34 @@ export const getUser = async (req, res) => {
       res.status(200).json(successMsg(user))
     } else {
       res.status(400).json(errorMsg('No User found'))
+    }
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// get User
+export const getUserByUsername = async (req, res) => {
+  try {
+    const { username } = req.params
+    const user = await User.findOne({ username }).lean()
+    if (user) {
+      switch (user.type) {
+        case USER_TYPE.EMPLOYER:
+          user.employer = await Employer.findOne({ user_id: user._id }).lean()
+          res.status(200).json(successMsg(user))
+          break
+        case USER_TYPE.SCHOOL:
+          user.school = await School.findOne({ user_id: user._id }).lean()
+          res.status(200).json(successMsg(user))
+          break
+        default:
+          res.status(200).json(successMsg(user))
+          break
+      }
+    } else {
+      throw Error('User not found')
     }
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
