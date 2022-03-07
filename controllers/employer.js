@@ -33,6 +33,16 @@ export const getAllEmployers = async (req, res) => {
 export const getPopularEmployers = async (req, res) => {
   try {
     const employers = await Employer.aggregate([
+      { $set: { _id: { $toObjectId: '$_id' } } },
+      { $set: { user_id: { $toObjectId: '$user_id' } } },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user_id',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
       {
         $lookup: {
           from: 'visits',
@@ -65,10 +75,12 @@ export const getEmployer = async (req, res) => {
   }
 }
 
-// FTS Search for employers
+// FTSearch for employers
 export const searchEmployers = async (req, res) => {
   try {
-    //
+    const regex = new RegExp(`.*${req.query.name}.*`, 'gi')
+    const employers = await User.find({ full_name: regex })
+    res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
