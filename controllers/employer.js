@@ -237,7 +237,7 @@ export const addEmployerQuestion = async (req, res) => {
 export const getEmployerQuestions = async (req, res) => {
   try {
     // const questions = await Question.find({ employer_id: req.params.id })
-    let questions = await Question.aggregate([
+    const questions = await Question.aggregate([
       { $match: { employer_id: req.params.id } },
       { $set: { _id: { $toString: '$_id' } } },
       {
@@ -246,7 +246,7 @@ export const getEmployerQuestions = async (req, res) => {
         }
       }
     ])
-    questions = questions.filter((question) => question.answers = question.answers.length)
+    questions.forEach(q => q.answers = q.answers.length )
     res.status(200).json(successMsg(questions))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
