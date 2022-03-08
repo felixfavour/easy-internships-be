@@ -18,6 +18,7 @@ const isAuth = (req, res, next) => {
         const tokenVerified = verifyJwt(token)
 
         if (tokenVerified.id) {
+          req.userId = tokenVerified.id
           next()
         }
       } catch (err) {

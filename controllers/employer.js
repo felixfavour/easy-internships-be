@@ -35,12 +35,21 @@ export const getPopularEmployers = async (req, res) => {
     const employers = await Employer.aggregate([
       { $set: { _id: { $toObjectId: '$_id' } } },
       { $set: { user_id: { $toObjectId: '$user_id' } } },
+      { $set: { interesting_user_id: { $toObjectId: '$interesting_user_id' } } },
       {
         $lookup: {
           from: 'users',
           localField: 'user_id',
           foreignField: '_id',
           as: 'user'
+        }
+      },
+      {
+        $lookup: {
+          from: 'interests',
+          localField: 'user_id',
+          foreignField: 'interesting_user_id',
+          as: 'interest'
         }
       },
       {
@@ -227,7 +236,17 @@ export const addEmployerQuestion = async (req, res) => {
 // Get all Questions for Employer
 export const getEmployerQuestions = async (req, res) => {
   try {
-    const questions = await Question.find({ employer_id: req.params.id })
+    // const questions = await Question.find({ employer_id: req.params.id })
+    let questions = await Question.aggregate([
+      { $match: { employer_id: req.params.id } },
+      { $set: { _id: { $toString: '$_id' } } },
+      {
+        $lookup: {
+          from: 'answers', localField: '_id', foreignField: 'question_id', as: 'answers'
+        }
+      }
+    ])
+    questions = questions.filter((question) => question.answers = question.answers.length)
     res.status(200).json(successMsg(questions))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
