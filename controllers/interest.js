@@ -7,10 +7,16 @@ export const getUserInterests = async (req, res) => {
   try {
     const interests = await Interest.aggregate([
       { $set: { interesting_user_id: { $toObjectId: '$interesting_user_id' } } },
+      { $set: { interesting_user_id_str: { $toString: '$interesting_user_id' } } },
       { $match: { interested_user_id: req.params.id } },
       {
         $lookup: {
           from: 'users', localField: 'interesting_user_id', foreignField: '_id', as: 'user'
+        }
+      },
+      {
+        $lookup: {
+          from: 'employers', localField: 'interesting_user_id_str', foreignField: 'user_id', as: 'employer'
         }
       }
     ])
