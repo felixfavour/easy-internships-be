@@ -18,7 +18,7 @@ export const getAllEmployers = async (req, res) => {
       { $set: { user_id: { $toObjectId: '$user_id' } } },
       {
         $lookup: {
-          from: 'users', localField: 'user_id', foreignField: '_id', as: 'users'
+          from: 'users', localField: 'user_id', foreignField: '_id', as: 'user'
         }
       }
     ])
@@ -62,6 +62,7 @@ export const getPopularEmployers = async (req, res) => {
       }
     ])
     employers.sort((a, b) => b.visits.length - a.visits.length)
+    employers.length = 6
     // eslint-disable-next-line no-param-reassign
     employers.forEach((employer) => delete employer.visits)
     res.status(200).json(successMsg(employers))
