@@ -5,7 +5,15 @@ import { Interest } from '../models/Interest.js'
 // Get User Interests
 export const getUserInterests = async (req, res) => {
   try {
-    const interests = await Interest.find({ })
+    const interests = await Interest.aggregate([
+      { $set: { interesting_user_id: { $toObjectId: '$interesting_user_id' } } },
+      { $match: { interested_user_id: req.params.id } },
+      {
+        $lookup: {
+          from: 'users', localField: 'interesting_user_id', foreignField: '_id', as: 'user'
+        }
+      }
+    ])
     res.status(200).json(successMsg(interests))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
