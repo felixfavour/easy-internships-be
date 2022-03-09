@@ -75,8 +75,28 @@ export const getPopularEmployers = async (req, res) => {
 export const getEmployer = async (req, res) => {
   try {
     const { id } = req.params
-    const employer = await Employer.findById(ObjectID(id)).lean()
+    const employers = await Employer.aggregate([
+      { $match: { _id: ObjectID(id) } },
+      {
+        $lookup: {
+          from: 'interests', localField: 'user_id', foreignField: 'interesting_user_id', as: 'interests'
+        }
+      }
+    ])
+    const [employer] = employers
     employer.user = await User.findById(ObjectID(employer.user_id))
+
+    // Find interests
+    // eslint-disable-next-line no-restricted-syntax
+    for (const interest of employer.interests) {
+      if (req.userId === interest.interested_user_id) {
+        employer.user_interested = true
+        break
+      } else {
+        employer.user_interested = false
+      }
+    }
+    delete employer.interests
     res.status(200).json(successMsg(employer))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -246,7 +266,7 @@ export const getEmployerQuestions = async (req, res) => {
         }
       }
     ])
-    questions.forEach(q => q.answers = q.answers.length )
+    questions.forEach((q) => q.answers = q.answers.length)
     res.status(200).json(successMsg(questions))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
