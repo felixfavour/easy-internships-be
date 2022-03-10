@@ -19,6 +19,7 @@ const UserSchema = mongoose.Schema({
   password: String,
   type: String,
   location: String,
+  cover_photo: String,
   avatar: String,
   icon: String,
   website: String,
