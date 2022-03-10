@@ -5,8 +5,40 @@ import { UserSkill } from '../models/UserSkill.js'
 // Get All skills
 export const getSkills = async (req, res) => {
   try {
-    const skills = await Skill.find({ })
+    const skills = await Skill.aggregate([
+      { $set: { _id: { $toString: '$_id' } } },
+      {
+        $lookup: {
+          from: 'userskills', localField: '_id', foreignField: 'skill_id', as: 'users'
+        }
+      }
+    ])
+    skills.forEach((skill) => {
+      skill.total_users = skill.users.length
+      if (skill.users.length > 3) {
+        skill.users.length = 3
+      }
+    })
     res.status(200).json(successMsg(skills))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Get User Skills
+export const getUserSkills = async (req, res) => {
+  try {
+    let userSkills = await UserSkill.aggregate([
+      { $set: { skill_id: { $toObjectId: '$skill_id' } } },
+      {
+        $lookup: {
+          from: 'skills', localField: 'skill_id', foreignField: '_id', as: 'skills'
+        }
+      }
+    ])
+    userSkills = userSkills.filter((us) => us.user_id.toString() === req.params.id)
+    res.status(200).json(successMsg(userSkills))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -46,33 +78,14 @@ export const removeUserSkill = async (req, res) => {
   }
 }
 
-// Get User Skills
-export const getUserSkills = async (req, res) => {
-  try {
-    let userSkills = await UserSkill.aggregate([
-      { $set: { skill_id: { $toObjectId: '$skill_id' } } },
-      {
-        $lookup: {
-          from: 'skills', localField: 'skill_id', foreignField: '_id', as: 'skills'
-        }
-      }
-    ])
-    userSkills = userSkills.filter((us) => us.user_id.toString() === req.params.id)
-    res.status(200).json(successMsg(userSkills))
-  } catch (err) {
-    console.error(`ERROR from ${req.url}: ${err}`)
-    res.status(400).json(errorMsg(err))
-  }
-}
-
 // Get All users with a skill - UNFINISHED
 export const getUsersBySkill = async (req, res) => {
   try {
-    const skills = await Skill.aggregate([
-      { $set: { skill_id: { $toObjectId: '$skill_id' } } },
+    const skills = await UserSkill.aggregate([
+      { $set: { user_id: { $toObjectId: '$user_id' } } },
       {
         $lookup: {
-          from: 'userskills', localField: '_id', foreignField: 'skill_id', as: 'users'
+          from: 'users', localField: 'user_id', foreignField: '_id', as: 'users'
         }
       }
     ])

@@ -9,7 +9,7 @@ import { Question } from '../models/Question.js'
 import { Answer } from '../models/Answer.js'
 import { QuestionVote } from '../models/QuestionVote.js'
 import { AnswerVote } from '../models/AnswerVote.js'
-import { VOTE } from '../helpers/constants.js'
+import { USER_TYPE, VOTE } from '../helpers/constants.js'
 
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
@@ -108,8 +108,16 @@ export const getEmployer = async (req, res) => {
 // FTSearch for employers
 export const searchEmployers = async (req, res) => {
   try {
-    const regex = new RegExp(`.*${req.query.name}.*`, 'gi')
-    const employers = await User.find({ full_name: regex })
+    const name = new RegExp(`.*${req.query.name}.*`, 'gi')
+    const location = new RegExp(`.*${req.query.location}.*`, 'gi')
+    const employers = await Employer.aggregate([
+      { $set: { user_id: { $toObjectId: '$user_id' } } },
+      {
+        $lookup: {
+          from: 'users', localField: 'user_id', foreignField: '_id', as: 'user'
+        }
+      }
+    ])
     res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
