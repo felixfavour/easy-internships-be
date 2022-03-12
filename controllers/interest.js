@@ -41,7 +41,7 @@ export const addUserInterest = async (req, res) => {
       primary_user: req.interested_user_id,
       secondary_user: req.interesting_user_id,
       message: `You showed interest in ${user.full_name}`,
-      type: ACTIVITY.VISIT
+      type: ACTIVITY.INTEREST
     })
     res.status(200).json(successMsg('Interest registration successful'))
   } catch (err) {
@@ -56,12 +56,12 @@ export const removeUserInterest = async (req, res) => {
     const interest = await Interest.findByIdAndDelete(ObjectID(req.params.id))
 
     // Create activity when user no longer shows interest in another user
-    const user = await User.findById(interest.interesting_user_id)
+    const user = await User.findById(interest.interesting_user_id).lean()
     await Activity.create({
       primary_user: interest.interested_user_id,
       secondary_user: interest.interesting_user_id,
       message: `You revoked your interest in ${user.full_name}`,
-      type: ACTIVITY.VISIT
+      type: ACTIVITY.INTEREST
     })
     res.status(200).json(successMsg('Removed interest successfully.'))
   } catch (err) {
