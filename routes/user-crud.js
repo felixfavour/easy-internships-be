@@ -1,5 +1,6 @@
 import {
   getUser,
+  getUserActivity,
   getUserByUsername,
   updatePassword,
   updateUser,
@@ -12,5 +13,6 @@ router.get('/v1/user/:id', getUser)
 router.put('/v1/user/:id', updateUser)
 router.get('/v1/user/username/:username', getUserByUsername)
 router.put('/v1/user/security/:id', updatePassword)
+router.get('/v1/user/activity/:id', getUserActivity)
 
 export default router

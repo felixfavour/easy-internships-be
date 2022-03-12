@@ -1,10 +1,11 @@
 import { ObjectID } from '../config/database.js'
 import { errorMsg, successMsg } from '../helpers/functions.js'
-import { USER_TYPE } from '../helpers/constants.js'
+import { ACTIVITY, USER_TYPE } from '../helpers/constants.js'
 import { User } from '../models/User.js'
 import { Visit } from '../models/Visit.js'
 import { School } from '../models/School.js'
 import { Employer } from '../models/Employer.js'
+import { Activity } from '../models/Activity.js'
 
 // get User
 export const getUser = async (req, res) => {
@@ -89,6 +90,15 @@ export const updateUserVisits = async (req, res) => {
       visited_user: ObjectID(visited_user),
       visited_user_type
     })
+
+    // Create activity when user visits
+    const user = await User.findById(ObjectID(visited_user)).lean()
+    await Activity.create({
+      primary_user: user_id,
+      secondary_user: user_id,
+      message: `You visited an employer, ${user.full_name}`,
+      type: ACTIVITY.VISIT
+    })
     res.status(200).json(successMsg(visit))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -99,7 +109,8 @@ export const updateUserVisits = async (req, res) => {
 // get User Activity
 export const getUserActivity = async (req, res) => {
   try {
-    //
+    const activities = await Activity.find({ primary_user: req.params.id })
+    res.status(200).json(successMsg(activities))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))

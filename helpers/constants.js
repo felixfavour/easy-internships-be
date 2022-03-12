@@ -16,6 +16,12 @@ export const VOTE = {
   DEFAULT: 'default'
 }
 
+export const ACTIVITY = {
+  INTEREST: 'interest',
+  SKILL: 'skill',
+  VISIT: 'visit',
+}
+
 export const UNPROTECTED_ROUTES = [
   '/',
   '/v1',
