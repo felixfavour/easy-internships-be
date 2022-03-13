@@ -273,9 +273,23 @@ export const getEmployerQuestions = async (req, res) => {
         $lookup: {
           from: 'answers', localField: '_id', foreignField: 'question_id', as: 'answers'
         }
+      },
+      {
+        $lookup: {
+          from: 'questionvotes', localField: '_id', foreignField: 'question_id', as: 'user_voted'
+        }
+      },
+      {
+        $lookup: {
+          from: 'questionvotes', localField: '_id', foreignField: 'question_id', as: 'votes'
+        }
       }
     ])
-    questions.forEach((q) => q.answers = q.answers.length)
+    questions.forEach((q) => {
+      q.answers = q.answers.length
+      q.votes = q.votes.length
+      q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
+    })
     res.status(200).json(successMsg(questions))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -297,7 +311,6 @@ export const voteEmployerQuestion = async (req, res) => {
     const votes = await QuestionVote.find({ question_id: req.params.id }).lean()
     const actualVotes = (votes.filter((v) => v.type === VOTE.UP).length)
     - votes.filter((v) => v.type === VOTE.DOWN).length
-    console.log(actualVotes)
     res.status(201).json(successMsg({ votes: actualVotes }))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
