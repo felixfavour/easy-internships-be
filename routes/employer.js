@@ -10,6 +10,7 @@ import {
   filterEmployers,
   getAllEmployers,
   getEmployer,
+  getEmployerQuestion,
   getEmployerQuestions,
   getEmployerReviews,
   getEmployerRoles,
@@ -45,6 +46,7 @@ router.delete('/v1/employer/salary/:id', deleteEmployerSalary)
 
 // EMPLOYER QandA
 router.post('/v1/employer/question', addEmployerQuestion)
+router.get('/v1/employer/question/:id', getEmployerQuestion)
 router.post('/v1/employer/answer', addEmployerQuestionAnswer)
 router.get('/v1/employer/:id/question', getEmployerQuestions)
 router.get('/v1/employer/question/:id/answer', getQuestionsAnswer)

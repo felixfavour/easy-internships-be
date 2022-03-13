@@ -297,6 +297,46 @@ export const getEmployerQuestions = async (req, res) => {
   }
 }
 
+// Get a Question for Employer
+export const getEmployerQuestion = async (req, res) => {
+  try {
+    // const questions = await Question.find({ employer_id: req.params.id })
+    const questions = await Question.aggregate([
+      { $match: { _id: ObjectID(req.params.id) } },
+      { $set: { _id: { $toString: '$_id' } } },
+      {
+        $lookup: {
+          from: 'answers', localField: '_id', foreignField: 'question_id', as: 'answers'
+        }
+      },
+      {
+        $lookup: {
+          from: 'questionvotes', localField: '_id', foreignField: 'question_id', as: 'user_voted'
+        }
+      },
+      {
+        $lookup: {
+          from: 'questionvotes', localField: '_id', foreignField: 'question_id', as: 'votes'
+        }
+      }
+    ])
+
+    // Throw error if no question is found
+    if (!questions[0]) {
+      throw Error('Question was not found')
+    }
+    questions.forEach((q) => {
+      q.answers = q.answers.length
+      q.votes = q.votes.length
+      q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
+    })
+    res.status(200).json(successMsg(questions[0]))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
 // Upvote/Downvote Employer Questions
 export const voteEmployerQuestion = async (req, res) => {
   try {
