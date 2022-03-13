@@ -382,7 +382,30 @@ export const addEmployerQuestionAnswer = async (req, res) => {
 // Get all Answers for Questions for Employer
 export const getQuestionsAnswer = async (req, res) => {
   try {
-    const answers = await Answer.find({ question_id: req.params.id })
+    const answers = await Answer.aggregate([
+      { $match: { question_id: req.params.id } },
+      { $set: { _id: { $toString: '$_id' } } },
+      {
+        $lookup: {
+          from: 'answervotes', localField: '_id', foreignField: 'answer_id', as: 'user_voted'
+        }
+      },
+      {
+        $lookup: {
+          from: 'answervotes', localField: '_id', foreignField: 'answer_id', as: 'votes'
+        }
+      }
+    ])
+
+    answers.forEach((q) => {
+      // Calculate question votes
+      const upvotes = q.votes.filter((v) => v.type === 'upvote').length
+      const downvotes = q.votes.filter((v) => v.type === 'downvote').length
+      q.votes = 0 + upvotes - downvotes
+
+      q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
+    })
+
     res.status(200).json(successMsg(answers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
