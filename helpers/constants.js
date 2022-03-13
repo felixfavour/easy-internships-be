@@ -5,9 +5,9 @@ export const USER_TYPE = {
 }
 
 export const INTERVIEW_DIFFICULTY = {
-  EMPLOYER: 'Difficult',
-  SCHOOL: 'Medium',
-  STUDENT: 'Easy'
+  EMPLOYER: 'difficult',
+  SCHOOL: 'medium',
+  STUDENT: 'easy'
 }
 
 export const VOTE = {

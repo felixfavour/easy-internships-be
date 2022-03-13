@@ -1,4 +1,5 @@
 import {
+  getStudentsBySchool,
   getUser,
   getUserActivity,
   getUserByUsername,
@@ -14,5 +15,8 @@ router.put('/v1/user/:id', updateUser)
 router.get('/v1/user/username/:username', getUserByUsername)
 router.put('/v1/user/security/:id', updatePassword)
 router.get('/v1/user/activity/:id', getUserActivity)
+
+// STUDENTS
+router.get('/v1/user/school/:id', getStudentsBySchool)
 
 export default router

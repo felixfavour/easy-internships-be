@@ -81,6 +81,17 @@ export const updatePassword = async (req, res) => {
   }
 }
 
+// Update User Password
+export const getStudentsBySchool = async (req, res) => {
+  try {
+    const students = await User.find({ student_school: req.params.id })
+    res.status(200).json(successMsg(students))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
 // Update number of User visits
 export const updateUserVisits = async (req, res) => {
   try {
