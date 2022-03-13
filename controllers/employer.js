@@ -287,7 +287,12 @@ export const getEmployerQuestions = async (req, res) => {
     ])
     questions.forEach((q) => {
       q.answers = q.answers.length
-      q.votes = q.votes.length
+
+      // Calculate question votes
+      const upvotes = q.votes.filter((v) => v.type === 'upvote').length
+      const downvotes = q.votes.filter((v) => v.type === 'downvote').length
+      q.votes = 0 + upvotes - downvotes
+
       q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
     })
     res.status(200).json(successMsg(questions))
@@ -327,7 +332,12 @@ export const getEmployerQuestion = async (req, res) => {
     }
     questions.forEach((q) => {
       q.answers = q.answers.length
-      q.votes = q.votes.length
+
+      // Calculate question votes
+      const upvotes = q.votes.filter((v) => v.type === 'upvote').length
+      const downvotes = q.votes.filter((v) => v.type === 'downvote').length
+      q.votes = 0 + upvotes - downvotes
+
       q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
     })
     res.status(200).json(successMsg(questions[0]))
