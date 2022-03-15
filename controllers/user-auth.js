@@ -19,9 +19,28 @@ export const loginUser = async (req, res) => {
   const { email, password, school_id } = req.body
   try {
     const user = await User.login(email, password)
+    let user_type_id = null
     const token = createToken(user._id, user.type);
+
+    // Add Employer/School ID to login response
+    switch (user.type) {
+      case USER_TYPE.EMPLOYER: {
+        const employer = await Employer.findOne({ user_id: user._id })
+        user_type_id = employer._id
+        break
+      }
+      case USER_TYPE.SCHOOL: {
+        const school = await School.findOne({ user_id: user._id })
+        user_type_id = school._id
+        break
+      }
+      default:
+        break
+    }
+
+    // Check User (student) enrollment
     if (user.student_school === school_id) {
-      res.status(200).json(successMsg({ user, token }))
+      res.status(200).json(successMsg({ user, token, user_type_id }))
     } else {
       throw Error('Student is not enrolled in this school')
     }
