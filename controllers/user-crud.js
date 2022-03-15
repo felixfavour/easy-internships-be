@@ -92,6 +92,17 @@ export const getStudentsBySchool = async (req, res) => {
   }
 }
 
+// get All Student Users
+export const getStudents = async (req, res) => {
+  try {
+    const students = await User.find({ type: USER_TYPE.STUDENT })
+    res.status(200).json(successMsg(students))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
 // Update number of User visits
 export const updateUserVisits = async (req, res) => {
   try {

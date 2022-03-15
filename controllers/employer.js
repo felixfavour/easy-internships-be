@@ -191,7 +191,8 @@ export const addEmployerRoles = async (req, res) => {
 // Get Employer Roles
 export const getEmployerRoles = async (req, res) => {
   try {
-    let employerRoles = await EmployerRole.aggregate([
+    const employerRoles = await EmployerRole.aggregate([
+      { $match: { user_id: req.params.id } },
       { $set: { role_id: { $toObjectId: '$role_id' } } },
       {
         $lookup: {
@@ -199,7 +200,6 @@ export const getEmployerRoles = async (req, res) => {
         }
       }
     ])
-    employerRoles = employerRoles.filter((us) => us.employer_id.toString() === req.params.id)
     res.status(200).json(successMsg(employerRoles))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)

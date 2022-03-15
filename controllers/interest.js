@@ -38,8 +38,8 @@ export const addUserInterest = async (req, res) => {
     // Create activity when user shows interest in another user
     const user = await User.findById(req.body.interesting_user_id).lean()
     await Activity.create({
-      primary_user: req.interested_user_id,
-      secondary_user: req.interesting_user_id,
+      primary_user: req.body.interested_user_id,
+      secondary_user: req.body.interesting_user_id,
       message: `You showed interest in ${user.full_name}`,
       type: ACTIVITY.INTEREST
     })
