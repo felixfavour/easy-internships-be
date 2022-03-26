@@ -299,7 +299,6 @@ export const getEmployerSalaries = async (req, res) => {
     const salaries = []
     const roles = await Role.aggregate([
       { $set: { _id: { $toString: '$_id' } } },
-      { $sort: { 'salary.amount': -1 } },
       {
         $lookup: {
           from: 'salaries',
@@ -316,10 +315,14 @@ export const getEmployerSalaries = async (req, res) => {
     for (const role of roles) {
       let totalSalaries = 0
       const numberOfSalaries = role.salaries.length
+
+      // Calculate Averages Salary for a Role
       for (const salary of role.salaries) {
         totalSalaries += salary.amount
       }
       averageSalary = Math.floor(totalSalaries / numberOfSalaries)
+
+      // Add Average salaries to response
       for (const salary of role.salaries) {
         salary.average_salary = averageSalary
         if (salary.employer_id === req.params.id) {

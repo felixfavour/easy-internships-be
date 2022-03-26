@@ -26,6 +26,7 @@ const UserSchema = mongoose.Schema({
   tagline: String,
   bio: String,
   student_school: String,
+  academics_score: Number,
   linkedin: String,
   views: Number
 }, { timestamps: true })
