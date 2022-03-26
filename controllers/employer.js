@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-restricted-syntax */
 import { errorMsg, successMsg } from '../helpers/functions.js'
 import { Employer } from '../models/Employer.js'
 import { User } from '../models/User.js'
@@ -9,19 +11,36 @@ import { Question } from '../models/Question.js'
 import { Answer } from '../models/Answer.js'
 import { QuestionVote } from '../models/QuestionVote.js'
 import { AnswerVote } from '../models/AnswerVote.js'
-import { USER_TYPE, VOTE } from '../helpers/constants.js'
+import { VOTE } from '../helpers/constants.js'
 
 // Get all Employers
 export const getAllEmployers = async (req, res) => {
   try {
     const employers = await Employer.aggregate([
       { $set: { user_id: { $toObjectId: '$user_id' } } },
+      { $set: { _id: { $toString: '$_id' } } },
       {
         $lookup: {
           from: 'users', localField: 'user_id', foreignField: '_id', as: 'user'
         }
+      },
+      {
+        $lookup: {
+          from: 'reviews', localField: '_id', foreignField: 'employer_id', as: 'rating'
+        }
       }
     ])
+
+    // Calculate Rating
+    for (const employer of employers) {
+      let ratingNumber = 0
+      for (const rating of employer.rating) {
+        ratingNumber += rating.rating
+      }
+      employer.rating = (ratingNumber / employer.rating.length)
+        ? (ratingNumber / employer.rating.length).toFixed(1)
+        : 0
+    }
     res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -34,6 +53,7 @@ export const getPopularEmployers = async (req, res) => {
   try {
     const employers = await Employer.aggregate([
       { $set: { _id: { $toObjectId: '$_id' } } },
+      { $set: { employer_id: { $toString: '$_id' } } },
       { $set: { user_id: { $toObjectId: '$user_id' } } },
       { $set: { interesting_user_id: { $toObjectId: '$interesting_user_id' } } },
       {
@@ -59,12 +79,30 @@ export const getPopularEmployers = async (req, res) => {
           foreignField: 'visited_user',
           as: 'visits'
         }
+      },
+      {
+        $lookup: {
+          from: 'reviews', localField: 'employer_id', foreignField: 'employer_id', as: 'rating'
+        }
       }
     ])
     employers.sort((a, b) => b.visits.length - a.visits.length)
     employers.length = 6
     // eslint-disable-next-line no-param-reassign
-    employers.forEach((employer) => delete employer.visits)
+    employers.forEach((employer) => {
+      delete employer.visits
+      delete employer.employer_id
+
+      // Calculate Rating
+      let ratingNumber = 0
+      for (const rating of employer.rating) {
+        ratingNumber += rating.rating
+      }
+      employer.rating = (ratingNumber / employer.rating.length)
+        ? (ratingNumber / employer.rating.length).toFixed(1)
+        : 0
+    })
+
     res.status(200).json(successMsg(employers))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -78,14 +116,29 @@ export const getEmployer = async (req, res) => {
     const { id } = req.params
     const employers = await Employer.aggregate([
       { $match: { _id: ObjectID(id) } },
+      { $set: { _id: { $toString: '$_id' } } },
       {
         $lookup: {
           from: 'interests', localField: 'user_id', foreignField: 'interesting_user_id', as: 'interests'
+        }
+      },
+      {
+        $lookup: {
+          from: 'reviews', localField: '_id', foreignField: 'employer_id', as: 'rating'
         }
       }
     ])
     const [employer] = employers
     employer.user = await User.findById(ObjectID(employer.user_id))
+
+    // Calculate rating
+    let ratingNumber = 0
+    for (const rating of employer.rating) {
+      ratingNumber += rating.rating
+    }
+    employer.rating = (ratingNumber / employer.rating.length)
+      ? (ratingNumber / employer.rating.length).toFixed(1)
+      : 0
 
     // Find interests
     // eslint-disable-next-line no-restricted-syntax
