@@ -7,6 +7,7 @@ import { ObjectID } from '../config/database.js'
 import { Review } from '../models/Review.js'
 import { EmployerRole } from '../models/EmployerRole.js'
 import { Salary } from '../models/Salary.js'
+import { Role } from '../models/Role.js'
 import { Question } from '../models/Question.js'
 import { Answer } from '../models/Answer.js'
 import { QuestionVote } from '../models/QuestionVote.js'
@@ -161,8 +162,8 @@ export const getEmployer = async (req, res) => {
 // FTSearch for employers
 export const searchEmployers = async (req, res) => {
   try {
-    const name = new RegExp(`.*${req.query.name}.*`, 'gi')
-    const location = new RegExp(`.*${req.query.location}.*`, 'gi')
+    // const name = new RegExp(`.*${req.query.name}.*`, 'gi')
+    // const location = new RegExp(`.*${req.query.location}.*`, 'gi')
     const employers = await Employer.aggregate([
       { $set: { user_id: { $toObjectId: '$user_id' } } },
       {
@@ -285,7 +286,48 @@ export const addEmployerSalary = async (req, res) => {
 // Get Employer Salaries
 export const getEmployerSalaries = async (req, res) => {
   try {
-    const salaries = await Salary.find({ employer_id: req.params.id })
+    // const salaries = await EmployerRole.aggregate([
+    //   { $match: { employer_id: req.params.id } },
+    //   { $set: { role_id: { $toString: '$role_id' } } },
+    //   {
+    //     $lookup: {
+    //       from: 'salaries', localField: 'role_id', foreignField: 'role_id', as: 'salaries'
+    //     }
+    //   }
+    // ])
+    // Salary comparison logic
+    const salaries = []
+    const roles = await Role.aggregate([
+      { $set: { _id: { $toString: '$_id' } } },
+      { $sort: { 'salary.amount': -1 } },
+      {
+        $lookup: {
+          from: 'salaries',
+          localField: '_id',
+          foreignField: 'role_id',
+          pipeline: [{ $sort: { amount: -1 } }],
+          as: 'salaries'
+        }
+      }
+    ])
+
+    // Get Average Salary
+    let averageSalary = 0
+    for (const role of roles) {
+      let totalSalaries = 0
+      const numberOfSalaries = role.salaries.length
+      for (const salary of role.salaries) {
+        totalSalaries += salary.amount
+      }
+      averageSalary = Math.floor(totalSalaries / numberOfSalaries)
+      for (const salary of role.salaries) {
+        salary.average_salary = averageSalary
+        if (salary.employer_id === req.params.id) {
+          salaries.push(salary)
+        }
+      }
+    }
+
     res.status(200).json(successMsg(salaries))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
@@ -346,7 +388,7 @@ export const getEmployerQuestions = async (req, res) => {
       const downvotes = q.votes.filter((v) => v.type === 'downvote').length
       q.votes = 0 + upvotes - downvotes
 
-      q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
+      q.user_voted = q.user_voted?.find((vote) => vote.user_id === req.userId)?.type || false
     })
     res.status(200).json(successMsg(questions))
   } catch (err) {
@@ -391,7 +433,7 @@ export const getEmployerQuestion = async (req, res) => {
       const downvotes = q.votes.filter((v) => v.type === 'downvote').length
       q.votes = 0 + upvotes - downvotes
 
-      q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
+      q.user_voted = q.user_voted?.find((vote) => vote.user_id === req.userId)?.type || false
     })
     res.status(200).json(successMsg(questions[0]))
   } catch (err) {
@@ -456,7 +498,7 @@ export const getQuestionsAnswer = async (req, res) => {
       const downvotes = q.votes.filter((v) => v.type === 'downvote').length
       q.votes = 0 + upvotes - downvotes
 
-      q.user_voted = q.user_voted?.find(vote => vote.user_id === req.userId)?.type || false
+      q.user_voted = q.user_voted?.find((vote) => vote.user_id === req.userId)?.type || false
     })
 
     res.status(200).json(successMsg(answers))
