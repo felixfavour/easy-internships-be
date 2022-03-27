@@ -1,4 +1,8 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
 import jwt from 'jsonwebtoken'
+import fs from 'fs'
+import csv from 'csv-parser'
 import { USER_TYPE } from '../helpers/constants.js';
 import { errorMsg, successMsg } from '../helpers/functions.js';
 import { Employer } from '../models/Employer.js';
@@ -13,7 +17,6 @@ const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id, user_type) => jwt.sign({ id, user_type }, process.env.JWT_SECRET, {
   expiresIn: maxAge
 });
-
 // Log In User
 export const loginUser = async (req, res) => {
   const { email, password, school_id } = req.body
@@ -72,6 +75,31 @@ export const createUser = async (req, res) => {
         break
     }
     res.status(201).json(successMsg({ user, token }))
+  } catch (err) {
+    console.error(`ERROR from ${req.url}: ${err}`)
+    res.status(400).json(errorMsg(err))
+  }
+}
+
+// Create Multiple Users with CSV
+export const createMultipleUsers = async (req, res) => {
+  try {
+    const users = []
+    fs.createReadStream(req.file.path)
+      .pipe(csv())
+      .on('data', (data) => {
+        users.push(data)
+      })
+      .on('end', async () => {
+        users.forEach((user) => user.student_school = req.body.school_id)
+        // Create users in array.
+        try {
+          const usersResponse = await User.create(...users)
+          res.status(201).json(successMsg(`${usersResponse.length} students have been registered`))
+        } catch (err) {
+          res.status(400).json(errorMsg(err))
+        }
+      })
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
