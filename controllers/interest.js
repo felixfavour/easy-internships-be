@@ -33,16 +33,25 @@ export const getUserInterests = async (req, res) => {
 // Add User Interests
 export const addUserInterest = async (req, res) => {
   try {
-    await Interest.create(req.body)
+    const attrs = {
+      interested_user_id: req.body.interested_user_id,
+      interesting_user_id: req.body.interesting_user_id
+    }
+    const findInterest = await Interest.find(attrs)
+    if (findInterest.length > 0) {
+      // Do nothing
+    } else {
+      await Interest.create(req.body)
 
-    // Create activity when user shows interest in another user
-    const user = await User.findById(req.body.interesting_user_id).lean()
-    await Activity.create({
-      primary_user: req.body.interested_user_id,
-      secondary_user: req.body.interesting_user_id,
-      message: `You showed interest in ${user.full_name}`,
-      type: ACTIVITY.INTEREST
-    })
+      // Create activity when user shows interest in another user
+      const user = await User.findById(req.body.interesting_user_id).lean()
+      await Activity.create({
+        primary_user: req.body.interested_user_id,
+        secondary_user: req.body.interesting_user_id,
+        message: `You showed interest in ${user.full_name}`,
+        type: ACTIVITY.INTEREST
+      })
+    }
     res.status(200).json(successMsg('Interest registration successful'))
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)

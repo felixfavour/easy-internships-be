@@ -234,8 +234,14 @@ export const deleteEmployerReviews = async (req, res) => {
 // Add Employer Roles
 export const addEmployerRoles = async (req, res) => {
   try {
-    const employerRole = await EmployerRole.create(req.body)
-    res.status(200).json(successMsg(employerRole))
+    const attrs = { role_id: req.body.role_id, user_id: req.body.user_id }
+    const findRole = await EmployerRole.find(attrs)
+    if (findRole.length > 0) {
+      res.status(400).json(errorMsg('You have already added this role'))
+    } else {
+      const employerRole = await EmployerRole.create(req.body)
+      res.status(200).json(successMsg(employerRole))
+    }
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
@@ -275,8 +281,14 @@ export const deleteEmployerRoles = async (req, res) => {
 // Add Employer Salary - Salary for a role is dependent on the employer.
 export const addEmployerSalary = async (req, res) => {
   try {
-    const salary = await Salary.create(req.body)
-    res.status(200).json(successMsg(salary))
+    const attrs = { employer_role_id: req.body.employer_role_id }
+    const findSalary = await Salary.find(attrs)
+    if (findSalary.length > 0) {
+      res.status(400).json(errorMsg('You have already added a salary for this role'))
+    } else {
+      const salary = await Salary.create(req.body)
+      res.status(200).json(successMsg(salary))
+    }
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))

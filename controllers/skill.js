@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { errorMsg, successMsg } from '../helpers/functions.js'
 import { Skill } from '../models/Skill.js'
 import { UserSkill } from '../models/UserSkill.js'
@@ -59,8 +60,14 @@ export const createSkill = async (req, res) => {
 // Add User Skill
 export const addUserSkill = async (req, res) => {
   try {
-    const userSkill = await UserSkill.create(req.body)
-    res.status(200).json(successMsg(userSkill))
+    const attrs = { skill_id: req.body.skill_id, user_id: req.body.user_id }
+    const findSkill = await UserSkill.find(attrs)
+    if (findSkill.length > 0) {
+      res.status(400).json(errorMsg('You have already added this skill'))
+    } else {
+      const userSkill = await UserSkill.create(req.body)
+      res.status(200).json(successMsg(userSkill))
+    }
   } catch (err) {
     console.error(`ERROR from ${req.url}: ${err}`)
     res.status(400).json(errorMsg(err))
