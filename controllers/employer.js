@@ -325,6 +325,7 @@ export const getEmployerSalaries = async (req, res) => {
       // Add Average salaries to response
       for (const salary of role.salaries) {
         salary.average_salary = averageSalary
+        salary.submissions = numberOfSalaries
         if (salary.employer_id === req.params.id) {
           salaries.push(salary)
         }
